@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <title>Valentine 💘</title>
+  <style>
+    body {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      overflow: hidden;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 40px;
+      color: #fff;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .buttons {
+      position: relative;
+      width: 300px;
+      height: 150px;
+    }
+
+    button {
+      padding: 15px 25px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    #yes {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    #no {
+      background-color: #f44336;
+      color: white;
+      position: absolute;
+      left: 150px;
+      top: 60px;
+    }
+
+    #message {
+      margin-top: 30px;
+      font-size: 20px;
+      color: #fff;
+      min-height: 30px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Vrei să fii Valentine-ul meu? 💖</h1>
+
+  <div class="buttons">
+    <button id="yes" onclick="sayYes()">DA 💕</button>
+    <button id="no">NU 😈</button>
+  </div>
+
+  <div id="message"></div>
+
+  <script>
+    const noBtn = document.getElementById("no");
+    const message = document.getElementById("message");
+
+    const messages = [
+      "Ești sigură?? 😏",
+      "Deci sigură, sigură??? 🤔",
+      "Sigur mă iubești? ❤️",
+      "Nu te grăbi! 💖",
+      "Hai mă… doar DA e răspunsul! 😎",
+      "Hmm… mai gândește! 😇"
+    ];
+
+    noBtn.addEventListener("mouseover", () => {
+      // mută butonul aleatoriu
+      const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+      const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+
+      // arată mesaj random
+      const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+      message.innerText = randomMsg;
+    });
+
+    function sayYes() {
+      document.body.innerHTML = `
+        <h1>Știam eu 😍💘</h1>
+        <p style="font-size: 24px; color: white;">Te iubesc ❤️</p>
+      `;
+    }
+  </script>
+
+</body>
+</html>
