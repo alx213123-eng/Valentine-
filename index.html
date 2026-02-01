@@ -1,122 +1,157 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <title>Valentine 💘</title>
-  <style>
-    body {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-      overflow: hidden;
-      text-align: center;
-    }
+<meta charset="UTF-8">
+<title>Valentine 💘</title>
 
-    h1 {
-      color: white;
-      margin-bottom: 30px;
-      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-    }
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+  color: white;
+  text-align: center;
+}
 
-    button {
-      padding: 15px 25px;
-      font-size: 18px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      margin: 10px;
-      position: absolute;
-    }
+h1 {
+  font-size: 2.5em;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
 
-    #yes {
-      background-color: #4CAF50;
-      color: white;
-      position: relative;
-    }
+button {
+  padding: 15px 30px;
+  font-size: 20px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  position: absolute;
+}
 
-    #no {
-      background-color: #f44336;
-      color: white;
-    }
+#yes {
+  background: #4CAF50;
+  color: white;
+  position: relative;
+}
 
-    #message {
-      margin-top: 100px;
-      font-size: 20px;
-      color: white;
-      min-height: 30px;
-    }
-  </style>
+#no {
+  background: #f44336;
+  color: white;
+}
+
+#message {
+  margin-top: 120px;
+  font-size: 22px;
+  min-height: 40px;
+}
+
+/* inimioare */
+.heart {
+  position: fixed;
+  top: -10px;
+  font-size: 24px;
+  animation: fall 4s linear forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh);
+    opacity: 0;
+  }
+}
+</style>
 </head>
+
 <body>
 
-  <h1>Vrei să fii Valentine-ul meu? 💖</h1>
+<h1>Vrei să fii Valentine-ul meu? 💖</h1>
 
-  <button id="yes">DA 💕</button>
-  <button id="no">NU 😈</button>
+<button id="yes">DA 💕</button>
+<button id="no">NU 😈</button>
 
-  <div id="message"></div>
+<div id="message"></div>
 
-  <script>
-    const noBtn = document.getElementById("no");
-    const yesBtn = document.getElementById("yes");
-    const message = document.getElementById("message");
+<script>
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
+const msg = document.getElementById("message");
 
-    let noCount = 0;
-    let yesCount = 0;
+let noCount = 0;
+let yesCount = 0;
 
-    const noMessages = [
-      "Ești sigură?? 😏",
-      "Deci sigură, sigură??? 🤨",
-      "Sigur mă iubești? ❤️",
-      "Hai măăă 😭",
-      "Refuz să cred asta 😈"
-    ];
+const noMessages = [
+  "Ești sigură?? 😏",
+  "Deci sigură, sigură??? 🤨",
+  "Sigur mă iubești? 🥺",
+  "Hai măăă 😭",
+  "Refuz să accept asta 😈"
+];
 
-    function moveNoButton() {
-      const maxX = window.innerWidth - noBtn.offsetWidth;
-      const maxY = window.innerHeight - noBtn.offsetHeight;
+// SUNET
+function beep(freq = 400) {
+  const ctx = new AudioContext();
+  const osc = ctx.createOscillator();
+  osc.type = "sine";
+  osc.frequency.value = freq;
+  osc.connect(ctx.destination);
+  osc.start();
+  setTimeout(() => osc.stop(), 120);
+}
 
-      const x = Math.random() * maxX;
-      const y = Math.random() * maxY;
+// mută butonul NU
+function moveNo() {
+  const x = Math.random() * (window.innerWidth - 100);
+  const y = Math.random() * (window.innerHeight - 100);
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+}
 
-      noBtn.style.left = x + "px";
-      noBtn.style.top = y + "px";
-    }
+// inimioare
+function heartRain() {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerText = "💖";
+  heart.style.left = Math.random() * window.innerWidth + "px";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 4000);
+}
 
-    // poziție inițială
-    moveNoButton();
+// poziție inițială
+moveNo();
 
-    noBtn.addEventListener("click", () => {
-      noCount++;
+noBtn.addEventListener("click", () => {
+  noCount++;
+  beep(300 + noCount * 50);
 
-      const msg = noMessages[Math.min(noCount - 1, noMessages.length - 1)];
-      message.innerText = msg;
+  msg.innerText = noMessages[Math.min(noCount - 1, noMessages.length - 1)];
+  moveNo();
 
-      moveNoButton();
+  if (noCount >= 3) {
+    noBtn.style.transition = "0.1s";
+    moveNo();
+  }
+});
 
-      if (noCount >= 3) {
-        noBtn.style.transition = "0.1s";
-        moveNoButton();
-      }
-    });
+yesBtn.addEventListener("click", () => {
+  yesCount++;
+  beep(600);
 
-    yesBtn.addEventListener("click", () => {
-      yesCount++;
-
-      if (yesCount === 1) {
-        message.innerText = "Pe bune?? 😳 Chiar vrei??";
-      } else {
-        document.body.innerHTML = `
-          <h1>Știam eu 😍💘</h1>
-          <p style="font-size:24px;color:white;">Te iubesc ❤️</p>
-        `;
-      }
-    });
-  </script>
+  if (yesCount === 1) {
+    msg.innerText = "Pe bune?? 😳 Chiar vrei??";
+  } else {
+    document.body.innerHTML = `
+      <h1>Știam eu 😍💘</h1>
+      <p style="font-size:24px;">Te iubesc ❤️</p>
+    `;
+    setInterval(heartRain, 200);
+  }
+});
+</script>
 
 </body>
 </html>
