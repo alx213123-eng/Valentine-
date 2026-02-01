@@ -1,157 +1,163 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-<meta charset="UTF-8">
-<title>Valentine 💘</title>
-
-<style>
-body {
-  margin: 0;
-  height: 100vh;
-  overflow: hidden;
-  background: linear-gradient(135deg, #ff758c, #ff7eb3);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-family: Arial, sans-serif;
-  color: white;
-  text-align: center;
-}
-
-h1 {
-  font-size: 2.5em;
-  text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-}
-
-button {
-  padding: 15px 30px;
-  font-size: 20px;
-  border: none;
-  border-radius: 15px;
-  cursor: pointer;
-  position: absolute;
-}
-
-#yes {
-  background: #4CAF50;
-  color: white;
-  position: relative;
-}
-
-#no {
-  background: #f44336;
-  color: white;
-}
-
-#message {
-  margin-top: 120px;
-  font-size: 22px;
-  min-height: 40px;
-}
-
-/* inimioare */
-.heart {
-  position: fixed;
-  top: -10px;
-  font-size: 24px;
-  animation: fall 4s linear forwards;
-}
-
-@keyframes fall {
-  to {
-    transform: translateY(110vh);
-    opacity: 0;
-  }
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vrei să fii Valentinul meu? 💘</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .container {
+      text-align: center;
+      padding: 30px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      max-width: 90%;
+    }
+    h1 {
+      font-size: 3.2rem;
+      margin: 0 0 40px;
+      text-shadow: 3px 3px 10px rgba(0,0,0,0.3);
+    }
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      position: relative;
+    }
+    button {
+      font-size: 1.8rem;
+      padding: 18px 60px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    #yesBtn {
+      background: #ff4757;
+      color: white;
+    }
+    #yesBtn:hover {
+      transform: scale(1.15);
+      background: #ff6b81;
+    }
+    #noBtn {
+      background: #57606f;
+      color: white;
+      position: relative;
+    }
+    #noBtn:hover {
+      background: #747d8c;
+    }
+    .heart {
+      position: absolute;
+      font-size: 3rem;
+      pointer-events: none;
+      animation: float 6s infinite;
+      opacity: 0.7;
+    }
+    @keyframes float {
+      0%   { transform: translateY(0) rotate(0deg); }
+      50%  { transform: translateY(-40px) rotate(10deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+    }
+  </style>
 </head>
-
 <body>
 
-<h1>Vrei să fii Valentine-ul meu? 💖</h1>
+  <div class="container">
+    <h1 id="question">Vrei să fii Valentinul meu? 💕</h1>
+    
+    <div class="buttons">
+      <button id="yesBtn">Da! 🥰</button>
+      <button id="noBtn">Nu... 😔</button>
+    </div>
+  </div>
 
-<button id="yes">DA 💕</button>
-<button id="no">NU 😈</button>
+  <script>
+    const question = document.getElementById('question');
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
 
-<div id="message"></div>
+    let noCount = 0;
+    const noPhrases = [
+      "Nu... 😔",
+      "Sigur nu? 🥺",
+      "Hai te rog... 😭",
+      "Ești crud(ă) rău... 💔",
+      "Încă nu? 😢",
+      "Asta doare... 😞",
+      "Ultima șansă... 🥹",
+      "Bine... dar tot te iubesc 💘"
+    ];
 
-<script>
-const noBtn = document.getElementById("no");
-const yesBtn = document.getElementById("yes");
-const msg = document.getElementById("message");
+    // Mișcare + schimbare text la No
+    noBtn.addEventListener('click', () => {
+      noCount++;
 
-let noCount = 0;
-let yesCount = 0;
+      if (noCount < noPhrases.length) {
+        noBtn.textContent = noPhrases[noCount - 1];
+      } else {
+        noBtn.textContent = "Ok... win 😭";
+        noBtn.style.opacity = "0.4";
+      }
 
-const noMessages = [
-  "Ești sigură?? 😏",
-  "Deci sigură, sigură??? 🤨",
-  "Sigur mă iubești? 🥺",
-  "Hai măăă 😭",
-  "Refuz să accept asta 😈"
-];
+      // Crește Yes
+      const currentScale = parseFloat(yesBtn.style.transform?.replace('scale(', '') || 1);
+      yesBtn.style.transform = `scale(${currentScale + 0.3})`;
 
-// SUNET
-function beep(freq = 400) {
-  const ctx = new AudioContext();
-  const osc = ctx.createOscillator();
-  osc.type = "sine";
-  osc.frequency.value = freq;
-  osc.connect(ctx.destination);
-  osc.start();
-  setTimeout(() => osc.stop(), 120);
-}
+      // Micșorează puțin No
+      noBtn.style.transform = `scale(${Math.max(0.6, 1 - noCount * 0.08)})`;
+    });
 
-// mută butonul NU
-function moveNo() {
-  const x = Math.random() * (window.innerWidth - 100);
-  const y = Math.random() * (window.innerHeight - 100);
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
-}
+    // Când apasă Da → efect frumos
+    yesBtn.addEventListener('click', () => {
+      question.innerHTML = "Yayyyy! Știam eu că o să zici da! 💖💖<br>Te pup și te strâng tare tare! 😘";
 
-// inimioare
-function heartRain() {
-  const heart = document.createElement("div");
-  heart.className = "heart";
-  heart.innerText = "💖";
-  heart.style.left = Math.random() * window.innerWidth + "px";
-  document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 4000);
-}
+      // Confetti simplu (fără librărie)
+      for (let i = 0; i < 120; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.innerHTML = ['❤️','💘','💖','💕','💗','💓'][Math.floor(Math.random()*6)];
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.top = '-10vh';
+        heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+        heart.style.animationDelay = Math.random() * 2 + 's';
+        document.body.appendChild(heart);
 
-// poziție inițială
-moveNo();
+        setTimeout(() => heart.remove(), 8000);
+      }
 
-noBtn.addEventListener("click", () => {
-  noCount++;
-  beep(300 + noCount * 50);
+      // Dezactivează butoanele
+      yesBtn.disabled = true;
+      noBtn.disabled = true;
+      noBtn.style.display = 'none';
+    });
 
-  msg.innerText = noMessages[Math.min(noCount - 1, noMessages.length - 1)];
-  moveNo();
-
-  if (noCount >= 3) {
-    noBtn.style.transition = "0.1s";
-    moveNo();
-  }
-});
-
-yesBtn.addEventListener("click", () => {
-  yesCount++;
-  beep(600);
-
-  if (yesCount === 1) {
-    msg.innerText = "Pe bune?? 😳 Chiar vrei??";
-  } else {
-    document.body.innerHTML = `
-      <h1>Știam eu 😍💘</h1>
-      <p style="font-size:24px;">Te iubesc ❤️</p>
-    `;
-    setInterval(heartRain, 200);
-  }
-});
-</script>
+    // Random inimi plutitoare la început
+    setInterval(() => {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.innerHTML = '💞';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.top = Math.random() * 100 + 'vh';
+      heart.style.fontSize = (Math.random() * 2 + 1.5) + 'rem';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 10000);
+    }, 1800);
+  </script>
 
 </body>
 </html>
